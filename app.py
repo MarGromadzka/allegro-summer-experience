@@ -3,6 +3,11 @@ from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
 
+@app.route("/")
+def repo_list(username):
+    return jsonify({"Error" : "User not specified"})
+
+
 @app.route("/list/<username>")
 def repo_list(username):
     try:
