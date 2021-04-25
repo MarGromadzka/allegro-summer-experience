@@ -9,15 +9,10 @@ class Api_handler:
         self.repos = self.get_repos_dict()
 
     def verify_username(self, username):
-        req = requests.get(f"https://api.github.com/users/{username}").json()
-        try:
-            if (req["message"] == "Not Found"):
-                raise UsernameError
-            elif "API rate limit exceeded" in req["message"]:
-                raise APILimitError
-        except KeyError:
-            pass
-
+        req = requests.get(f"https://api.github.com/users/{username}")
+        if req.status_code >= 400:
+            raise Exception(req.json()["message"])
+        
          
     def get_repos_dict(self):
         flag = True
@@ -42,10 +37,3 @@ class Api_handler:
     def get_starsum(self):
         return [{"starsum" : sum(repo["stargazers_count"] for repo in self.repos)}]
 
-
-class UsernameError(Exception):
-    pass
-
-
-class APILimitError(Exception):
-    pass

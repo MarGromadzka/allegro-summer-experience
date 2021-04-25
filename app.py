@@ -1,4 +1,4 @@
-from githubapi_handler import Api_handler, UsernameError, APILimitError
+from githubapi_handler import Api_handler
 from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
@@ -7,10 +7,8 @@ app = Flask(__name__)
 def repo_list(username):
     try:
         api = Api_handler(username)
-    except UsernameError:
-        return jsonify({"Error" : "User not found"})
-    except APILimitError:
-        return jsonify({"Error" : "API rate limit exceeded"})
+    except Exception as e:
+        return jsonify({"Error" : str(e)})
     return jsonify(api.get_list())
 
 
@@ -18,10 +16,8 @@ def repo_list(username):
 def star_summary(username):
     try:
         api = Api_handler(username)
-    except UsernameError:
-        return jsonify({"Error" : "User not found"})
-    except APILimitError:
-        return jsonify({"Error" : "API rate limit exceeded"})
+    except Exception as e:
+        return jsonify({"Error" : str(e)})
     return jsonify(api.get_starsum())
 
 
